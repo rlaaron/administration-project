@@ -7,7 +7,9 @@
     "start": "",
     "dev": "npm-run-all --parallel dev:front dev:back",
     "dev:front": "cd projectfront && npm run dev",
-    "dev:back": "cd projectback && npm run start:dev"
+    "dev:back": "cd projectback && npm run start:dev",
+    "setup": "npm install && cd projectfront && npm install && cd .. && cd projectback && npm install"
+    
   },
   "keywords": [],
   "author": "",
