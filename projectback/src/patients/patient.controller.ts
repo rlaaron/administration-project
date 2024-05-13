@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
 import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 
-@Controller('patient')
+@Controller('patients')
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
@@ -17,9 +17,9 @@ export class PatientController {
     return this.patientService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.patientService.findOne(+id);
+  @Get(':term')
+  findOne(@Param('term') term: string) {
+    return this.patientService.findOne(term);
   }
 
   @Patch(':id')
@@ -28,7 +28,7 @@ export class PatientController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.patientService.remove(+id);
   }
 }
