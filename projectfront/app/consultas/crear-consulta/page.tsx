@@ -1,5 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import { Patient } from "@/app/pacientes/crear-paciente/interfaces/Patient";
+import { FaPersonWalkingDashedLineArrowRight } from "react-icons/fa6";
 
 const daysOfWeek = ["Dom", "Lun", "Mart", "Mier", "Juev", "Vie", "Sab"];
 const timeSlots = [
@@ -13,7 +16,7 @@ const timeSlots = [
   "04:00 PM",
   "05:00 PM",
 ];
-const patients = ["John Doe", "Jane Smith", "Alice Johnson", "Bob Brown"];
+// const patients = ["John Doe", "Jane Smith", "Alice Johnson", "Bob Brown"];
 
 const Calendar: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
@@ -22,6 +25,8 @@ const Calendar: React.FC = () => {
   const [scheduledAppointments, setScheduledAppointments] = useState<
     { date: number; time: string }[]
   >([]);
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const linkBack = process.env.PUBLIC_LINK_BACK;
 
   const today = new Date();
   const daysInMonth = new Date(
@@ -30,12 +35,9 @@ const Calendar: React.FC = () => {
     0
   ).getDate();
 
-  const handleSchedule = () => {
+  const handleSchedule = async () => {
     if (selectedDate && selectedTime && selectedPatient) {
-      setScheduledAppointments([
-        ...scheduledAppointments,
-        { date: selectedDate, time: selectedTime },
-      ]);
+      const response = await scheduleAppointment();
     }
   };
 
@@ -44,6 +46,61 @@ const Calendar: React.FC = () => {
       (appointment) => appointment.date === date && appointment.time === time
     );
   };
+
+  const getPatients = useCallback(async () => {
+    try {
+      const patients: Patient[] = await axios.get(`${linkBack}/patients`);
+      // const patients = response.data.map((patient: Patient) => patient.name);
+      setPatients(patients);
+      console.log("patients", patients);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [linkBack]);
+
+  const scheduleAppointment = async () => {
+    try {
+      const date = `${selectedDate}/${
+        today.getMonth() + 1
+      }/${today.getFullYear()}`;
+      const patient = findPatient();
+      const data = {
+        date,
+        time: selectedTime,
+        patient,
+      };
+      console.log("data", data);
+
+      // const response = await axios.post(`${linkBack}/appointments`, {
+      //   date: selectedDate,
+      //   time: selectedTime,
+      //   patient: selectedPatient,
+      // });
+      // console.log("response", response.data);
+      const response = await axios.post(`${linkBack}/appointments`, data);
+      console.log("response", response.data);
+      return;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const findPatient = () => {
+    try {
+      const patient = patients.find(
+        (patient) => patient.name === selectedPatient
+      );
+      console.log("patient", patient);
+      return patient;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getPatients();
+    console.log("scheduledAppointments", scheduledAppointments);
+  }, [getPatients, scheduledAppointments]);
 
   return (
     // <div className="p-4">
@@ -62,9 +119,14 @@ const Calendar: React.FC = () => {
             <option value="" disabled>
               Selecione un paciente
             </option>
+            {/* {patients.map((patient) => (
+              <option key={patient.name} value={patient}>
+                {patient.name}
+              </option>
+            ))} */}
             {patients.map((patient) => (
-              <option key={patient} value={patient}>
-                {patient}
+              <option key={patient.name} value={patient.name}>
+                {patient.name}
               </option>
             ))}
           </select>

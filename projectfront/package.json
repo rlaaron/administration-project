@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@ionic/react": "^8.1.2",
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
     "ionicons": "^7.4.0",
     "next": "14.2.3",
     "react": "^18",

@@ -1,16 +1,45 @@
 "use client";
 import { useState } from "react";
+import axios from 'axios';
+import 'dotenv/config'
+import { Patient } from './interfaces/Patient';
+
+
 
 export default function CreatePatient() {
   const [fullName, setFullName] = useState<string>("");
   const [gender, setGender] = useState<string>("");
   const [age, setAge] = useState<number>(18); // Default age to 18, as it's the minimum valid age
+  const linkBack = process.env.PUBLIC_LINK_BACK;
+  const [success, setSuccess] = useState<boolean>(false);
+  
 
   const validGenders = ["Femenino", "Masculino", "sin especificar"];
   const validAges = Array.from(
     { length: 60 - 18 + 1 },
     (_, index) => 18 + index
   );
+
+  const _createPatient = async () => {
+    if(fullName.length < 3 && age !=null && gender !=null){
+      alert("Por favor ingrese los datos correctamente")
+    }else{
+      const patient: Patient = {
+        name: fullName,
+        gender,
+        age,
+      };
+      try{
+        const response = await axios.post(`${linkBack}/patients`, patient);
+        console.log(response);
+        if(response.status === 201){
+          alert("Paciente creado con éxito")
+        }
+      }catch(error){
+        console.error(error)
+      }
+    }
+  };
 
   return (
     <div className="bg-first flex items-center justify-center min-h-screen">
@@ -95,6 +124,7 @@ export default function CreatePatient() {
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={_createPatient}
           >
             Submit
           </button>
