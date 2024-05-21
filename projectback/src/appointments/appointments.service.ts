@@ -33,7 +33,7 @@ export class AppointmentsService {
       console.log('patient:', patient);
       const appointment = this.appointmentRepository.create({
         ...appointmentData,
-        patient: await this.PatientService.findOne(patient[0].id),
+        patient: await this.PatientService.findOne(patient.id),
       });
       console.log('appointment:', appointment);
       

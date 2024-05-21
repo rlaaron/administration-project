@@ -9,8 +9,7 @@ export default function Home() {
               type="button"
               className="text-Crear Pedido text-first hover:text-white border border-first hover:bg-first focus:ring-4 focus:outline-none focus:ring-first font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2  "
             >
-              <a href="/">CREAR CONSULTA</a>
-              {/* Consultar pedidos */}
+              <a href="/consultas/crear-consulta">CREAR CONSULTA</a>
             </button>
           </div>
   
