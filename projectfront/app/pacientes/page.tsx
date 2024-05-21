@@ -19,7 +19,7 @@ export default function Home() {
               type="button"
               className="text-Consultar Pedidos text-first hover:text-white border border-first hover:bg-first focus:ring-4 focus:outline-none focus:ring-first font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2  "
             >
-              <a href="/consultas"> CREAR CONSULTAS</a>
+              <a href="/pacientes/consultar-pacientes">CONSULTAR PACIENTES</a>
             </button>
           </div>
         </div>
